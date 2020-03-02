@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    var heightConstraint:NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do an additional setup after loading the view.
@@ -20,16 +22,22 @@ class ViewController: UIViewController {
 //        view.addSubview(firstUIView)
 //
 //
-       view.addSubview(initView)
-       view.addSubview(rightViewTop)
-       view.addSubview(rightViewBottom)
-       view.addSubview(bottomView)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapped))
+        self.view.addGestureRecognizer(tap)
+
+        view.addSubview(initView)
+        view.addSubview(rightViewTop)
+        view.addSubview(rightViewBottom)
+        view.addSubview(bottomView)
+        
+        heightConstraint = initView.heightAnchor.constraint(equalToConstant: CGFloat(150.0))
         
         let constraints = [
             initView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 50),
             initView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20),
             initView.widthAnchor.constraint(equalToConstant: CGFloat(150.0)),
-            initView.heightAnchor.constraint(equalToConstant: CGFloat(150.0)),
+            heightConstraint,
             
             rightViewTop.topAnchor.constraint(equalTo: self.initView.topAnchor),
             rightViewTop.leftAnchor.constraint(equalTo: self.initView.rightAnchor, constant: 20),
@@ -48,10 +56,23 @@ class ViewController: UIViewController {
         ]
                                                 
 
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate(constraints as! [NSLayoutConstraint])
 
         
        // secondUIView.constraints
+    }
+    
+    @objc private func tapped(){
+        if self.heightConstraint!.constant != 0 {
+            self.heightConstraint!.constant = 0
+        }
+        else {
+            self.heightConstraint!.constant = 150.0
+        }
+
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
     }
 
 
